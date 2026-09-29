@@ -23,6 +23,8 @@ Tên file gợi ý:
 
 Có thể dùng `.txt` cho output của tests/validators. Có thể tách dashboard thành nhiều ảnh nếu một ảnh không đọc rõ.
 
+Để tạo ảnh dashboard runtime, chạy Streamlit theo [DASHBOARD_SETUP.md](../../docs/DASHBOARD_SETUP.md), mở `http://localhost:8501`, rồi chụp toàn bộ sáu panel và lưu thành `11-dashboard-overview.png`.
+
 Ảnh `04`, `05`, `13` lấy từ terminal hoặc `data/logs.jsonl`. Ảnh `06`–`10`, `14` lấy từ project Langfuse cá nhân `day13-k4-l3a-<MSSV>` và nên nhìn thấy tên project. Không mở/chụp trang API Keys.
 
 Từ `submission/REPORT.md`, dẫn ảnh bằng đường dẫn tương đối:

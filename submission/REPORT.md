@@ -28,7 +28,7 @@
 | Trace metadata | `evidence/08-trace-metadata.txt` |
 | Prompt versions | `evidence/09-prompt-versions.txt` |
 | Prompt rollback | `evidence/10-prompt-rollback.txt` |
-| Dashboard runtime | `evidence/11-dashboard-overview.txt` |
+| Dashboard runtime | `evidence/11-dashboard-overview.png` và `evidence/11-dashboard-overview.txt` |
 | Incident metric | `evidence/12-incident-metric.txt` |
 | Incident log | `evidence/13-incident-log.txt` |
 | Incident trace | `evidence/14-incident-trace.txt` |
@@ -98,7 +98,7 @@ Nguyên nhân baseline chưa đạt là các TODO trong `app/middleware.py` và 
 
 ## 6. Dashboard, SLO và alerts
 
-- **Dashboard và sáu panel:** Contract `config/dashboard.yaml` đã hợp lệ 6/6; runtime data summary nằm tại `evidence/11-dashboard-overview.txt` và cần được dùng để chụp dashboard có 6 panel.
+- **Dashboard và sáu panel:** Contract `config/dashboard.yaml` hợp lệ 6/6; dashboard local nằm tại `scripts/dashboard.py`, đọc `data/logs.jsonl` và có đủ latency/TTFT, traffic, errors/retrieval, cost, tokens và quality. Runtime summary nằm tại `evidence/11-dashboard-overview.txt`; ảnh cần chụp sau khi mở `http://localhost:8501` là `evidence/11-dashboard-overview.png`.
 - **SLO và lý do chọn:** SLO `fast_successful_requests` yêu cầu 99.5% request thành công với latency không quá 3000 ms trong cửa sổ 28 ngày.
 - **Cách tính error budget:** `100% - 99.5% = 0.5%` request được phép không đạt SLO trong mỗi cửa sổ 28 ngày.
 - **Ba alert và runbook tương ứng:** Đã cấu hình latency P95, error rate và retrieval success trong `config/alert_rules.yaml`; runbook nằm tại `docs/alerts.md`.
@@ -122,12 +122,13 @@ Nguyên nhân baseline chưa đạt là các TODO trong `app/middleware.py` và 
 - **Cách hiểu luồng Metrics → Logs → Traces:** Metrics cho thấy 5/5 request vượt 2000 ms; log lấy `req-db9bd7ff`; trace `663cc910f399a440184fb797d22ddb53` cho thấy retrieval chậm 2.502 s và generation chỉ 0.153 s.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** Prompt version giúp truy xuất v1/v2 và rollback production; token/cost nằm trên generation observation; SLO/alert biến latency và error budget thành tín hiệu vận hành.
 - **Điều quan trọng nhất đã học:** Baseline validator giúp xác định các thiếu sót của starter trước khi triển khai logging và observability.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** Đã hoàn tất source/config và incident analysis; còn thiếu ảnh runtime dashboard, trace/prompt/rollback và commit SHA cuối.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** Đã hoàn tất source/config, dashboard local và incident analysis; còn cần bổ sung ảnh runtime dashboard/trace/prompt/rollback và commit SHA cuối vào bộ hồ sơ nộp.
 
 ## 9. Checklist trước khi nộp
 
 - [ ] Kết quả và evidence thuộc commit SHA cuối.
 - [ ] Tất cả ảnh/output mở được bằng đường dẫn tương đối.
+- [ ] Ảnh `evidence/11-dashboard-overview.png` cho thấy đủ sáu panel, time range, đơn vị và threshold.
 - [ ] Incident evidence nối đúng metric → log → trace.
 - [ ] Trace/prompt evidence thuộc project Langfuse cá nhân và ảnh không lộ key/secret.
 - [ ] Repository chạy lại được theo README.

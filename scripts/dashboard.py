@@ -13,6 +13,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 LOG_PATH = REPO_ROOT / "data" / "logs.jsonl"
 TIME_RANGE_MINUTES = 60
 REFRESH_SECONDS = 30
+CHART_HEIGHT = 120
+WINDOW_EVENTS = {"request_received", "response_sent", "request_failed"}
 
 
 def load_records(path: Path) -> list[dict[str, Any]]:
@@ -44,7 +46,14 @@ def parse_timestamp(value: Any) -> datetime | None:
 
 def filter_window(records: list[dict[str, Any]], minutes: int) -> list[dict[str, Any]]:
     timestamps = [parse_timestamp(record.get("ts")) for record in records]
-    valid_timestamps = [timestamp for timestamp in timestamps if timestamp is not None]
+    telemetry_timestamps = [
+        timestamp
+        for record, timestamp in zip(records, timestamps)
+        if timestamp is not None and record.get("event") in WINDOW_EVENTS
+    ]
+    valid_timestamps = telemetry_timestamps or [
+        timestamp for timestamp in timestamps if timestamp is not None
+    ]
     if not valid_timestamps:
         return []
 
@@ -106,7 +115,7 @@ def render_dashboard() -> None:
     requests = [record for record in records if record.get("event") == "request_received"]
     failures = [record for record in records if record.get("event") == "request_failed"]
 
-    st.title("K4-L3A Day 13 Monitoring & LLMOps")
+    st.header("K4-L3A Day 13 Monitoring & LLMOps")
     st.caption(f"Last {minutes} minutes | {len(records)} structured log records | refresh {REFRESH_SECONDS}s")
 
     latency_values = numeric_values(responses, "latency_ms")
@@ -128,17 +137,20 @@ def render_dashboard() -> None:
         else 0.0
     )
 
-    latency_col, traffic_col = st.columns(2)
+    latency_col, traffic_col, errors_col = st.columns(3)
     with latency_col:
         with st.container(border=True):
             st.subheader("Latency percentiles and TTFT")
-            st.metric("P50", f"{percentile(latency_values, 50):.0f} ms")
-            metric_cols = st.columns(3)
-            metric_cols[0].metric("P95", f"{percentile(latency_values, 95):.0f} ms")
-            metric_cols[1].metric("P99", f"{percentile(latency_values, 99):.0f} ms")
-            metric_cols[2].metric("TTFT P95", f"{percentile(ttft_values, 95):.0f} ms")
+            metric_cols = st.columns(4)
+            metric_cols[0].metric("P50", f"{percentile(latency_values, 50):.0f} ms")
+            metric_cols[1].metric("P95", f"{percentile(latency_values, 95):.0f} ms")
+            metric_cols[2].metric("P99", f"{percentile(latency_values, 99):.0f} ms")
+            metric_cols[3].metric("TTFT P95", f"{percentile(ttft_values, 95):.0f} ms")
             if latency_values:
-                st.line_chart({"latency_ms": latency_values, "ttft_ms": ttft_values})
+                st.line_chart(
+                    {"latency_ms": latency_values, "ttft_ms": ttft_values},
+                    height=CHART_HEIGHT,
+                )
             threshold_caption("P95", "<=", 3000, "ms")
 
     with traffic_col:
@@ -148,10 +160,9 @@ def render_dashboard() -> None:
             st.metric("Requests", len(requests))
             st.metric("Rate", f"{request_rate:.2f} requests/min")
             if traffic_by_minute:
-                st.bar_chart(traffic_by_minute)
+                st.bar_chart(traffic_by_minute, height=CHART_HEIGHT)
             threshold_caption("Rate", ">=", 1, "requests/min")
 
-    errors_col, cost_col = st.columns(2)
     with errors_col:
         with st.container(border=True):
             st.subheader("Error rate and retrieval success")
@@ -165,16 +176,16 @@ def render_dashboard() -> None:
                 st.caption("No request failures in the selected window.")
             threshold_caption("Error rate", "<=", 2, "%")
 
+    cost_col, tokens_col, quality_col = st.columns(3)
     with cost_col:
         with st.container(border=True):
             st.subheader("Cost over time")
             total_cost = sum(numeric_values(responses, "cost_usd"))
             st.metric("Total cost", f"${total_cost:.6f}")
             if cost_by_minute:
-                st.bar_chart(cost_by_minute)
+                st.bar_chart(cost_by_minute, height=CHART_HEIGHT)
             threshold_caption("Total", "<=", 2.5, "USD")
 
-    tokens_col, quality_col = st.columns(2)
     with tokens_col:
         with st.container(border=True):
             st.subheader("Input and output tokens")
@@ -183,7 +194,10 @@ def render_dashboard() -> None:
             st.metric("Input tokens", f"{input_tokens:,.0f}")
             st.metric("Output tokens", f"{output_tokens:,.0f}")
             if responses:
-                st.bar_chart({"input": [input_tokens], "output": [output_tokens]})
+                st.bar_chart(
+                    {"input": [input_tokens], "output": [output_tokens]},
+                    height=CHART_HEIGHT,
+                )
             threshold_caption("Total", "<=", 50000, "tokens")
 
     with quality_col:
@@ -193,7 +207,7 @@ def render_dashboard() -> None:
             quality_mean = sum(quality_values) / len(quality_values) if quality_values else 0.0
             st.metric("Mean quality", f"{quality_mean:.3f}")
             if quality_values:
-                st.line_chart({"quality_score": quality_values})
+                st.line_chart({"quality_score": quality_values}, height=CHART_HEIGHT)
             threshold_caption("Mean", ">=", 0.75, "score")
 
     if not records:
@@ -204,6 +218,32 @@ st.set_page_config(
     page_title="Day 13 Monitoring & LLMOps",
     page_icon="📊",
     layout="wide",
+)
+
+st.markdown(
+    """
+    <style>
+    [data-testid="stMainBlockContainer"] {
+        max-width: 100%;
+        padding: 0.65rem 1rem 0.4rem;
+    }
+    [data-testid="stVerticalBlock"] { gap: 0.35rem; }
+    [data-testid="stHorizontalBlock"] { gap: 0.6rem; }
+    [data-testid="stMetric"] { padding: 0; }
+    [data-testid="stMetricLabel"] { font-size: 0.72rem; }
+    [data-testid="stMetricValue"] { font-size: 1.15rem; }
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0.5rem; }
+    h2 {
+        font-size: 1.45rem !important;
+        line-height: 1.35 !important;
+        margin: 0 0 0.25rem !important;
+        padding: 0.1rem 0 !important;
+    }
+    h3 { font-size: 0.95rem !important; margin: 0 !important; }
+    .stCaptionContainer { font-size: 0.72rem; }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 

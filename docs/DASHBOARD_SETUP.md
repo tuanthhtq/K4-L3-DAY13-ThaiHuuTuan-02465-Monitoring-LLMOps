@@ -31,6 +31,22 @@ python scripts/validate_dashboard.py
 
 Validator kiểm tra cấu trúc contract; nó không thể chứng minh biểu đồ trong ảnh dùng đúng dữ liệu. Evidence runtime vẫn bắt buộc.
 
+## Chạy dashboard Streamlit local
+
+Dashboard đã triển khai tại [`../scripts/dashboard.py`](../scripts/dashboard.py). Từ thư mục repository, chạy:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run scripts/dashboard.py --server.headless true --server.port 8501
+```
+
+Mở `http://localhost:8501`. Dashboard đọc trực tiếp `data/logs.jsonl`, mặc định hiển thị 60 phút gần nhất và tự refresh mỗi 30 giây. Mốc thời gian được lấy từ các event request/response, không bị lệch bởi log `app_started`. Sidebar cho phép đổi time range hoặc bấm `Reload now` để đọc lại file log.
+
+Sáu panel tương ứng với contract là latency/TTFT, request traffic, error rate/retrieval success, cost, input/output tokens và quality score. Mỗi panel hiển thị đơn vị và threshold; sau khi có workload trong log, chụp toàn bộ dashboard lưu thành `submission/evidence/11-dashboard-overview.png`.
+
+Ở màn hình desktop, dashboard dùng bố cục 3 cột x 2 hàng và biểu đồ thấp để sáu panel vừa trong một viewport. Trên màn hình hẹp, các cột tự động xếp lại để nội dung vẫn đọc được.
+
+Tiêu đề dashboard dùng component heading chuẩn của Streamlit với chiều cao dòng cố định để vẫn hiển thị đầy đủ khi dùng chế độ compact.
+
 ## Cách kiểm tra runtime
 
 1. Lưu ảnh baseline và giá trị P95/error/cost hiện tại.
