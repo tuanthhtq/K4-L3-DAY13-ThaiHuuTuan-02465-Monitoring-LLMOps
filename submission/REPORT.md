@@ -4,13 +4,13 @@
 
 ## 1. Thông tin học viên
 
-- **Họ và tên:**
-- **MSSV:**
+- **Họ và tên:** Thái Hữu Tuấn
+- **MSSV:** 2a202602465
 - **Lớp:** K4-L3A
-- **Repository URL:**
+- **Repository URL:** https://github.com/tuanthhtq/K4-L3-DAY13-ThaiHuuTuan-02465-Monitoring-LLMOps
 - **Commit SHA cuối:**
-- **Challenge ID:**
-- **Tên project Langfuse cá nhân:** `day13-k4-l3a-<MSSV>`
+- **Challenge ID:** Chưa nhận challenge chính thức
+- **Tên project Langfuse cá nhân:** `day13-k4-l3a-2a202602465` (cần xác nhận)
 
 ## 2. Evidence index
 
@@ -19,10 +19,10 @@
 | Evidence | Đường dẫn |
 |---|---|
 | Pytest cuối | `evidence/01-pytest.png` |
-| Log validator | `evidence/02-log-validator.png` |
+| Log validator | `evidence/02-log-validator.txt` |
 | Dashboard validator | `evidence/03-dashboard-validator.png` |
 | Structured log | `evidence/04-structured-log.png` |
-| PII redaction | `evidence/05-pii-redaction.png` |
+| PII redaction | `evidence/05-pii-redaction.txt` |
 | Trace list | `evidence/06-trace-list.png` |
 | Trace waterfall | `evidence/07-trace-waterfall.png` |
 | Trace metadata | `evidence/08-trace-metadata.png` |
@@ -37,38 +37,71 @@
 
 | Nội dung | Baseline | Kết quả cuối | Nhận xét |
 |---|---|---|---|
-| `validate_logs.py` | | | |
-| `validate_dashboard.py` | | | |
-| `pytest` | | | |
-| Số traces hợp lệ | | | |
-| Số PII leak | | | |
-| Latency P95 / TTFT P95 | | | |
-| Retrieval success rate | | | |
+| `validate_logs.py` | 30/100 | 100/100 | 22 log records, 10 correlation IDs, không thiếu required/enrichment fields |
+| `validate_dashboard.py` | Chưa chạy | 6/6 panel | Dashboard contract hợp lệ |
+| `pytest` | Chưa chạy | 22 passed | Toàn bộ test hiện tại đạt |
+| Số traces hợp lệ | Chưa kiểm tra | Chưa thực hiện | Sẽ tạo và kiểm tra ở CP2 |
+| Số PII leak | 0 | 0 | Workload CP1 không phát hiện PII nguyên văn |
+| Latency P95 / TTFT P95 | Chưa tính | Chưa thực hiện | Load test đã chạy nhưng chưa tổng hợp percentile |
+| Retrieval success rate | Chưa tính | Chưa thực hiện | Sẽ kiểm tra qua dashboard |
+
+### Baseline CP1
+
+Đã chạy:
+
+```text
+python scripts/load_test.py
+python scripts/validate_logs.py
+```
+
+Kết quả baseline:
+
+- Tổng số log được phân tích: 22
+- Log thiếu required fields: 20
+- Log thiếu enrichment context: 20
+- Số correlation ID duy nhất: 0
+- Số PII leak: 0
+- Điểm ước tính: 30/100
+- Các request trả về HTTP 200 nhưng correlation ID là `MISSING`
+
+Nguyên nhân baseline chưa đạt là các TODO trong `app/middleware.py` và `app/main.py` chưa được hoàn thiện. Middleware chưa tạo/truyền correlation ID và log chưa được enrich với `user_id_hash`, `session_id`, `feature`, `model`, `env`.
+
+### Kết quả CP1 sau khi triển khai
+
+Đã xóa log cũ, chạy lại workload và kiểm tra bằng `python scripts/validate_logs.py`:
+
+- Tổng số log được phân tích: 21
+- Log thiếu required fields: 0
+- Log thiếu enrichment context: 0
+- Số correlation ID duy nhất: 10
+- Số PII leak: 0
+- Điểm ước tính: 100/100
+- 10 request đều trả HTTP 200 và có correlation ID dạng `req-<8-hex>`
 
 ## 4. Logging và PII
 
-- **Cách tạo/nhận và truyền correlation ID:**
-- **Các metadata được ghi vào structured log:**
-- **Cách bảo đảm PII được scrub trước khi ghi:**
-- **Cách kiểm chứng kết quả:**
+- **Cách tạo/nhận và truyền correlation ID:** `app/middleware.py` nhận `x-request-id` hoặc sinh ID dạng `req-<8-hex>`, bind vào structlog context và trả lại qua `x-request-id`; kết quả CP1 có 10 correlation IDs duy nhất.
+- **Các metadata được ghi vào structured log:** Đã bổ sung bind `user_id_hash`, `session_id`, `feature`, `model` và `env` trong `app/main.py`; validator ghi nhận 0 log thiếu enrichment.
+- **Cách bảo đảm PII được scrub trước khi ghi:** `scrub_event` được đăng ký trước `JsonlFileProcessor` trong `app/logging_config.py`; scrubber xử lý cả string, dict và list lồng nhau.
+- **Cách kiểm chứng kết quả:** Dùng `python scripts/validate_logs.py`; baseline đạt 30/100 và kết quả CP1 hiện tại đạt 100/100. Evidence runtime nằm tại `evidence/05-pii-redaction.txt`.
 
 ## 5. Tracing và prompt versioning
 
-- **Cách xác nhận traces do chính tôi tạo trong project cá nhân:**
-- **Cấu trúc root/retrieval/generation observations:**
-- **Cách nối trace với log:**
-- **Prompt name:**
-- **Version/label baseline:**
-- **Version/label candidate:**
-- **Trace ID của mỗi version:**
-- **Cách promote và rollback `production`:**
+- **Cách xác nhận traces do chính tôi tạo trong project cá nhân:** Chạy workload bằng key của project `day13-k4-l3a-2a202602465`; cần bổ sung ảnh danh sách tối thiểu 10 trace.
+- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` là root; `retrieval` là child loại `retriever`; `fake-llm-generate` là child loại `generation`. Child observations đã được thêm trong `app/agent.py`.
+- **Cách nối trace với log:** Dùng cùng `correlation_id` trong metadata của root/child observation và structured log.
+- **Prompt name:** `day13-chat`
+- **Version/label baseline:** Cần điền sau khi tạo prompt version 1 với labels `baseline`, `production`.
+- **Version/label candidate:** Cần điền sau khi tạo prompt version 2 với label `candidate`.
+- **Trace ID của mỗi version:** Cần điền sau khi chạy workload trên Langfuse.
+- **Cách promote và rollback `production`:** Cần lưu ảnh trạng thái trước/sau khi chuyển `production` sang v2 rồi rollback về v1.
 
 ## 6. Dashboard, SLO và alerts
 
-- **Dashboard và sáu panel:**
-- **SLO và lý do chọn:**
-- **Cách tính error budget:**
-- **Ba alert và runbook tương ứng:**
+- **Dashboard và sáu panel:** Contract `config/dashboard.yaml` đã hợp lệ 6/6; runtime dashboard cần dựng từ `data/logs.jsonl` và chụp evidence.
+- **SLO và lý do chọn:** SLO `fast_successful_requests` yêu cầu 99.5% request thành công với latency không quá 3000 ms trong cửa sổ 28 ngày.
+- **Cách tính error budget:** `100% - 99.5% = 0.5%` request được phép không đạt SLO trong mỗi cửa sổ 28 ngày.
+- **Ba alert và runbook tương ứng:** Đã cấu hình latency P95, error rate và retrieval success trong `config/alert_rules.yaml`; runbook nằm tại `docs/alerts.md`.
 
 ## 7. Điều tra challenge
 
@@ -83,13 +116,13 @@
 
 ## 8. Giải thích và tự đánh giá
 
-- **Một quyết định kỹ thuật quan trọng và lý do:**
-- **Một lỗi/blocker đã gặp:**
-- **Cách tìm nguyên nhân và xử lý:**
-- **Cách hiểu luồng Metrics → Logs → Traces:**
-- **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:**
-- **Điều quan trọng nhất đã học:**
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:**
+- **Một quyết định kỹ thuật quan trọng và lý do:** Dùng correlation ID do client truyền vào khi hợp lệ, nếu không có thì sinh ID mới dạng `req-<8-hex>` để nối request giữa log và trace.
+- **Một lỗi/blocker đã gặp:** Lần cài đặt đầu tiên dùng Python 3.14 khiến `pydantic-core` phải build từ source và thất bại do PyO3 chưa hỗ trợ Python 3.14.
+- **Cách tìm nguyên nhân và xử lý:** Đọc lỗi build chỉ ra Python 3.14 vượt phiên bản tối đa PyO3 hỗ trợ; hướng xử lý là tạo virtual environment bằng Python 3.11.
+- **Cách hiểu luồng Metrics → Logs → Traces:** Chưa thực hiện CP3; dự kiến dùng metrics xác định khoảng thời gian, log lấy `correlation_id`, rồi trace xác định span gây lỗi/chậm.
+- **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** Chưa thực hiện CP2; sẽ cập nhật sau khi có trace và prompt evidence.
+- **Điều quan trọng nhất đã học:** Baseline validator giúp xác định các thiếu sót của starter trước khi triển khai logging và observability.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** CP1 đã hoàn thiện; chưa có kết quả cuối của CP2/CP3 gồm Langfuse traces, dashboard runtime và incident evidence.
 
 ## 9. Checklist trước khi nộp
 

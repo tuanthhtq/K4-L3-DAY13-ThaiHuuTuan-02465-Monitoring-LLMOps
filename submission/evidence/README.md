@@ -6,10 +6,10 @@ Tên file gợi ý:
 
 ```text
 01-pytest.png
-02-log-validator.png
+02-log-validator.txt
 03-dashboard-validator.png
 04-structured-log.png
-05-pii-redaction.png
+05-pii-redaction.txt
 06-trace-list.png
 07-trace-waterfall.png
 08-trace-metadata.png

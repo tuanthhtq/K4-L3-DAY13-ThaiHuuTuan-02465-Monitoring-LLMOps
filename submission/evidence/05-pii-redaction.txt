@@ -1,0 +1,10 @@
+CP1 PII redaction runtime check
+
+Synthetic input categories: email, Vietnamese phone, CCCD, payment card
+HTTP status: 200
+
+Redacted structured-log payload:
+email [REDACTED_EMAIL]; phone [REDACTED_PHONE_VN]; CCCD [REDACTED_CCCD]; card [REDACTED_CREDIT_CARD]
+
+Correlation ID: req-e3975867
+Result: all four synthetic PII categories were scrubbed before JSONL output.
