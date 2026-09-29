@@ -1,0 +1,2 @@
+Structured log sample from data/logs.jsonl
+{"ts": "2026-09-29T09:35:06.259982Z", "level": "info", "service": "api", "event": "response_sent", "correlation_id": "req-db9bd7ff", "env": "dev", "user_id_hash": "dc9b2ec8da9d", "session_id": "k4-l3a-challenge-s03", "feature": "monitoring", "model": "claude-sonnet-4-5", "latency_ms": 4035, "ttft_ms": 50, "tokens_in": 35, "tokens_out": 137, "cost_usd": 0.00216, "quality_score": 0.8, "tool_name": "retrieval", "tool_success": true}

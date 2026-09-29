@@ -1,0 +1,5 @@
+Langfuse project: day13-k4-l3a-2a202602465
+Observation source: Langfuse v2 observations API
+Root traces in the last 24 hours: 35
+Challenge traces in the current incident run: 5
+Each challenge trace contains lab-agent-run, retrieval and fake-llm-generate observations.

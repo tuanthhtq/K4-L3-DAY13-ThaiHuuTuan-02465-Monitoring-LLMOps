@@ -1,0 +1,27 @@
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Current challenge traces found: 5
+
+trace_id=12d20e7f40c0621b787b503f3d9202ef session_id=k4-l3a-challenge-s01 correlation_id=req-d42f2dfa
+{"name": "retrieval", "type": "RETRIEVER", "parentObservationId": "29c1b403381b22d6", "latency": 2.502, "version": ""}
+{"name": "lab-agent-run", "type": "AGENT", "parentObservationId": null, "latency": 2.653, "version": "1"}
+{"name": "fake-llm-generate", "type": "GENERATION", "parentObservationId": "29c1b403381b22d6", "latency": 0.151, "version": "1"}
+
+trace_id=1bc2c0a4231ecfb6043e2d31b844d714 session_id=k4-l3a-challenge-s04 correlation_id=req-1802b940
+{"name": "lab-agent-run", "type": "AGENT", "parentObservationId": null, "latency": 2.654, "version": "1"}
+{"name": "retrieval", "type": "RETRIEVER", "parentObservationId": "d1c461cc9d58824a", "latency": 2.502, "version": ""}
+{"name": "fake-llm-generate", "type": "GENERATION", "parentObservationId": "d1c461cc9d58824a", "latency": 0.152, "version": "1"}
+
+trace_id=663cc910f399a440184fb797d22ddb53 session_id=k4-l3a-challenge-s03 correlation_id=req-db9bd7ff
+{"name": "retrieval", "type": "RETRIEVER", "parentObservationId": "30cb548463acf604", "latency": 2.502, "version": ""}
+{"name": "lab-agent-run", "type": "AGENT", "parentObservationId": null, "latency": 4.036, "version": "1"}
+{"name": "fake-llm-generate", "type": "GENERATION", "parentObservationId": "30cb548463acf604", "latency": 0.153, "version": "1"}
+
+trace_id=a0832abb074587de67f76853ed718871 session_id=k4-l3a-challenge-s05 correlation_id=req-6a1b9bf1
+{"name": "lab-agent-run", "type": "AGENT", "parentObservationId": null, "latency": 2.655, "version": "1"}
+{"name": "retrieval", "type": "RETRIEVER", "parentObservationId": "fd051dac589597ce", "latency": 2.502, "version": ""}
+{"name": "fake-llm-generate", "type": "GENERATION", "parentObservationId": "fd051dac589597ce", "latency": 0.151, "version": "1"}
+
+trace_id=f94c477978543f14c55b10fc0813bdf2 session_id=k4-l3a-challenge-s02 correlation_id=req-2b776c21
+{"name": "retrieval", "type": "RETRIEVER", "parentObservationId": "26337a93fe9da4c2", "latency": 2.501, "version": ""}
+{"name": "lab-agent-run", "type": "AGENT", "parentObservationId": null, "latency": 2.653, "version": "1"}
+{"name": "fake-llm-generate", "type": "GENERATION", "parentObservationId": "26337a93fe9da4c2", "latency": 0.152, "version": "1"}

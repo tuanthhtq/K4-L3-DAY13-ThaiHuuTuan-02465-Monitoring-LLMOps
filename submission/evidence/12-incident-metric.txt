@@ -1,0 +1,12 @@
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Incident: rag_slow
+Affected feature: monitoring
+Threshold: latency_ms > 2000
+Requests analyzed: 5
+Latency values (ms): [2652, 2653, 2653, 2654, 4035]
+Min latency (ms): 2652
+Max latency (ms): 4035
+Mean latency (ms): 2929.4
+Requests over threshold: 5/5
+TTFT values (ms): [50, 50, 50, 50, 50]
+Symptom: retrieval-backed requests exceeded the 2000 ms challenge threshold while HTTP requests remained successful.

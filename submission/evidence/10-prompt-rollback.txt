@@ -1,0 +1,6 @@
+baseline: version=1
+candidate: version=2
+production: version=1
+Promote performed: production -> version 2
+Rollback performed: production -> version 1
+Final production version: 1

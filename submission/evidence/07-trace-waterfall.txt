@@ -1,0 +1,9 @@
+Trace ID: 663cc910f399a440184fb797d22ddb53
+Correlation ID: req-db9bd7ff
+
+Root/child waterfall:
+lab-agent-run (AGENT, 4.036 s, version 1)
+|- retrieval (RETRIEVER, 2.502 s)
+`- fake-llm-generate (GENERATION, 0.153 s, version 1)
+
+The retrieval and generation observations have the root observation as parent.

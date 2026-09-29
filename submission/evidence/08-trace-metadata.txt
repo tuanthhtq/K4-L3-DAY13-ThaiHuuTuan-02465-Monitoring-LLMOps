@@ -1,0 +1,7 @@
+Trace ID: 110f905e35354da7092f0f33a4c7a63f
+Correlation ID: req-0c1ffd62
+Root metadata: model=claude-sonnet-4-5, feature=monitoring, prompt_name=day13-chat, prompt_label=production, prompt_version=1
+Generation prompt: day13-chat version 1
+Generation usage: input_tokens=30, output_tokens=129, total=159
+Generation cost: total_cost=0.002025 USD
+Raw user prompt/output is not captured; only sanitized previews are recorded.

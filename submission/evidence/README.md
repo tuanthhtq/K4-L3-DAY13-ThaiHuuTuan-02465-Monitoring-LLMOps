@@ -5,20 +5,20 @@
 Tên file gợi ý:
 
 ```text
-01-pytest.png
+01-pytest.txt
 02-log-validator.txt
-03-dashboard-validator.png
-04-structured-log.png
+03-dashboard-validator.txt
+04-structured-log.txt
 05-pii-redaction.txt
-06-trace-list.png
-07-trace-waterfall.png
-08-trace-metadata.png
-09-prompt-versions.png
-10-prompt-rollback.png
-11-dashboard-overview.png
-12-incident-metric.png
-13-incident-log.png
-14-incident-trace.png
+06-trace-list.txt
+07-trace-waterfall.txt
+08-trace-metadata.txt
+09-prompt-versions.txt
+10-prompt-rollback.txt
+11-dashboard-overview.txt
+12-incident-metric.txt
+13-incident-log.txt
+14-incident-trace.txt
 ```
 
 Có thể dùng `.txt` cho output của tests/validators. Có thể tách dashboard thành nhiều ảnh nếu một ảnh không đọc rõ.

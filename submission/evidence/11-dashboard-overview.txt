@@ -1,0 +1,8 @@
+Dashboard runtime data summary (source: data/logs.jsonl, current challenge window)
+Time range: current generated workload
+1. Latency/TTFT: P50=2653 ms, P95=4035 ms, P99=4035 ms, TTFT P95=50 ms, threshold=3000 ms
+2. Traffic: requests=7, request_per_minute=derived from timestamps
+3. Errors/retrieval: error_rate=0.0%, retrieval_success=100.0%
+4. Cost: total_usd=0.015795, threshold=2.5 USD
+5. Tokens: input=235, output=1006
+6. Quality: mean=0.829, threshold=0.75

@@ -1,0 +1,5 @@
+Prompt traces:
+session=prompt-production-v1-rollback trace_id=20249ddb95c44be546b5ae0d91d9ee45 root_version=1 generation_version=1
+session=prompt-version-candidate trace_id=22ad7fe48f1fbc74cefc26e2b5438353 root_version=2 generation_version=2
+session=prompt-production-v2 trace_id=6d668fa40dd38c3b3dca7c3c2a84bf16 root_version=2 generation_version=2
+session=prompt-version-baseline trace_id=cbd3feece73e667bbd3457aeb5c2fd3e root_version=1 generation_version=1

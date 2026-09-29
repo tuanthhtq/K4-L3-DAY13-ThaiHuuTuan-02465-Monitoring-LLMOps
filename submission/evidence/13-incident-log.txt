@@ -1,0 +1,7 @@
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Event: response_sent
+{"ts": "2026-09-29T09:35:06.259982Z", "correlation_id": "req-db9bd7ff", "feature": "monitoring", "latency_ms": 4035, "ttft_ms": 50, "tool_name": "retrieval", "tool_success": true, "quality_score": 0.8}
+{"ts": "2026-09-29T09:35:08.919757Z", "correlation_id": "req-6a1b9bf1", "feature": "monitoring", "latency_ms": 2654, "ttft_ms": 50, "tool_name": "retrieval", "tool_success": true, "quality_score": 0.8}
+{"ts": "2026-09-29T09:35:11.576393Z", "correlation_id": "req-d42f2dfa", "feature": "monitoring", "latency_ms": 2652, "ttft_ms": 50, "tool_name": "retrieval", "tool_success": true, "quality_score": 0.8}
+{"ts": "2026-09-29T09:35:14.232426Z", "correlation_id": "req-1802b940", "feature": "monitoring", "latency_ms": 2653, "ttft_ms": 50, "tool_name": "retrieval", "tool_success": true, "quality_score": 0.9}
+{"ts": "2026-09-29T09:35:16.890265Z", "correlation_id": "req-2b776c21", "feature": "monitoring", "latency_ms": 2653, "ttft_ms": 50, "tool_name": "retrieval", "tool_success": true, "quality_score": 0.9}

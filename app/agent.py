@@ -108,6 +108,7 @@ class LabAgent:
                     },
                     metadata={
                         "correlation_id": correlation_id,
+                        "model": self.model,
                         "prompt_name": prompt.name,
                         "prompt_label": prompt.label,
                         "prompt_version": prompt.version,
@@ -121,6 +122,7 @@ class LabAgent:
                     if generation_observation is not None:
                         generation_observation.update(
                             output={"answer_preview": summarize_text(response.text)},
+                            model=self.model,
                             usage_details={
                                 "input_tokens": response.usage.input_tokens,
                                 "output_tokens": response.usage.output_tokens,
@@ -128,6 +130,7 @@ class LabAgent:
                             cost_details={"total_cost": cost_usd},
                             metadata={
                                 "correlation_id": correlation_id,
+                                "model": self.model,
                                 "prompt_name": prompt.name,
                                 "prompt_label": prompt.label,
                                 "prompt_version": prompt.version,
